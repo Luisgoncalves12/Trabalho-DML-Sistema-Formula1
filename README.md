@@ -21,7 +21,12 @@ Também dá para abrir o arquivo no MySQL Workbench e executar tudo de uma vez. 
 
 ## Tabelas
 
-O banco tem 5 tabelas:
+O banco tem 5 tabelas. O diagrama abaixo mostra como elas se relacionam:
+
+<img width="949" height="533" alt="Captura de tela 2026-10-28 094834" src="https://github.com/user-attachments/assets/871c9801-248a-48a3-a2db-9529d33bb6c9" />
+
+
+Diagrama de relacionamento do db_formula1
 
 | Tabela | Chave primária | Chaves estrangeiras |
 |--------|----------------|---------------------|
@@ -53,100 +58,119 @@ Os 10 pilotos extras (números 21 a 30) são para cumprir o mínimo pedido no en
 
 ## Queries
 
-1. Inserir pelo menos 5 pilotos do Brasil, 3 da Itália e 2 da França: `INSERT INTO td_pilotos`
-2. Popular todas as tabelas: `INSERT` em todas as tabelas
-3. Países que começam com B e terminam com L:
+### 1. Inserir pelo menos 5 pilotos do Brasil, 3 da Itália e 2 da França
 
-   ```sql
-   SELECT nome FROM td_paises
-   WHERE nome LIKE 'B%l';
-   ```
-Resultado da query 
+```sql
+INSERT INTO td_pilotos (numero, nome, cod_pais, sigla_equipe)
+VALUES (21, 'Lucas Ferreira', 'BRA', 'LOT'), ...
+```
 
-<img width="265" height="188" alt="image" src="https://github.com/user-attachments/assets/a3ecce0e-ef79-4c92-97a4-a5406c61d3a1" />
+### 2. Popular todas as tabelas
 
-4. Pilotos do Brasil, Itália e França:
+`INSERT` em todas as tabelas (ver o arquivo `trabalho_formula1.sql`).
 
-   ```sql
-   SELECT nome AS 'Nome' FROM td_pilotos
-   WHERE cod_pais IN ('BRA', 'ITA', 'FRA');
-   ```
-Resultado da query 
+### 3. Países que começam com B e terminam com L
 
-<img width="294" height="217" alt="image" src="https://github.com/user-attachments/assets/48d50905-3a7e-4781-8109-072f5872c1ed" />
+```sql
+SELECT nome FROM td_paises
+WHERE nome LIKE 'B%l';
+```
 
+Resultado:
 
-5. Nome dos pilotos:
+<img width="265" height="188" alt="Resultado da query 3" src="https://github.com/user-attachments/assets/a3ecce0e-ef79-4c92-97a4-a5406c61d3a1" />
 
-   ```sql
-   SELECT nome FROM td_pilotos;
-   ```
-Resultado da query 
+### 4. Pilotos do Brasil, Itália e França
 
-<img width="258" height="196" alt="image" src="https://github.com/user-attachments/assets/d3bfb0bf-2423-488a-87eb-cef952efde2c" />
+```sql
+SELECT nome AS 'Nome' FROM td_pilotos
+WHERE cod_pais IN ('BRA', 'ITA', 'FRA');
+```
 
+Resultado:
 
-5. Nome dos GPs e quantidade de voltas (com alias):
+<img width="294" height="217" alt="Resultado da query 4" src="https://github.com/user-attachments/assets/48d50905-3a7e-4781-8109-072f5872c1ed" />
 
-   ```sql
-   SELECT nome_gp AS 'Grande Prêmio', qtd_voltas AS 'Quantidade de Voltas'
-   FROM td_corridas;
-   ```
-Resultado da query 
+### 5. Nome dos pilotos
 
-   <img width="327" height="319" alt="image" src="https://github.com/user-attachments/assets/908aaa29-526f-40ca-838c-e0430377d9d1" />
+```sql
+SELECT nome FROM td_pilotos;
+```
 
+Resultado:
 
-5. Nome dos pilotos e seus países:
+<img width="258" height="196" alt="Resultado da query 5" src="https://github.com/user-attachments/assets/d3bfb0bf-2423-488a-87eb-cef952efde2c" />
 
-   ```sql
-   SELECT nome AS 'Nome', cod_pais AS 'País' FROM td_pilotos;
-   ```
-   
-Resultado da query 
+### 6. Nome dos GPs e quantidade de voltas (com alias)
 
-<img width="289" height="312" alt="image" src="https://github.com/user-attachments/assets/442f09af-8e3a-48b3-b137-5eeb6164f3bd" />
+```sql
+SELECT nome_gp AS 'Grande Prêmio', qtd_voltas AS 'Quantidade de Voltas'
+FROM td_corridas;
+```
 
-6. Inserir o atributo salário na tabela piloto:
+Resultado:
 
-   ```sql
-   ALTER TABLE td_pilotos
-   ADD COLUMN salario DECIMAL(10,2);
-   ```
+<img width="327" height="319" alt="Resultado da query 6" src="https://github.com/user-attachments/assets/908aaa29-526f-40ca-838c-e0430377d9d1" />
 
-7. Popular o salário: um `UPDATE td_pilotos SET salario = ... WHERE numero = ...` para cada piloto
-8. Pilotos com salário entre 70 e 100 mil:
+### 7. Nome dos pilotos e seus países
 
-    ```sql
-    SELECT nome
-    FROM td_pilotos
-    WHERE salario BETWEEN 70000 AND 100000;
-    ```
-Resultado da query 
+```sql
+SELECT nome AS 'Nome', cod_pais AS 'País' FROM td_pilotos;
+```
 
-<img width="226" height="289" alt="image" src="https://github.com/user-attachments/assets/64c5ac6e-0528-419a-adbf-b7dd64bcd647" />
+Resultado:
 
-9. Média salarial por país:
+<img width="289" height="312" alt="Resultado da query 7" src="https://github.com/user-attachments/assets/442f09af-8e3a-48b3-b137-5eeb6164f3bd" />
 
-    ```sql
-    SELECT cod_pais AS 'País', AVG(salario) AS 'Média Salarial'
-    FROM td_pilotos
-    GROUP BY cod_pais;
-    ```
-Resultado da query 
+### 8. Inserir o atributo salário na tabela piloto
 
-<img width="248" height="277" alt="image" src="https://github.com/user-attachments/assets/9defdcc6-1b79-453a-bc9b-5914c60a1c52" />
+```sql
+ALTER TABLE td_pilotos
+ADD COLUMN salario DECIMAL(10,2);
+```
 
+### 9. Popular o salário
 
-10. Salários diferentes em ordem crescente:
+Um `UPDATE` para cada piloto:
 
-    ```sql
-    SELECT DISTINCT salario FROM td_pilotos
-    ORDER BY salario ASC;
-    ```
-Resultado da query 
+```sql
+UPDATE td_pilotos SET salario = 85000.00 WHERE numero = 1;
+```
 
-<img width="219" height="269" alt="image" src="https://github.com/user-attachments/assets/ba580a5b-03c0-4d91-a0f2-69e7679b02c5" />
+### 10. Pilotos com salário entre 70 e 100 mil
+
+```sql
+SELECT nome
+FROM td_pilotos
+WHERE salario BETWEEN 70000 AND 100000;
+```
+
+Resultado:
+
+<img width="226" height="289" alt="Resultado da query 10" src="https://github.com/user-attachments/assets/64c5ac6e-0528-419a-adbf-b7dd64bcd647" />
+
+### 11. Média salarial por país
+
+```sql
+SELECT cod_pais AS 'País', AVG(salario) AS 'Média Salarial'
+FROM td_pilotos
+GROUP BY cod_pais;
+```
+
+Resultado:
+
+<img width="248" height="277" alt="Resultado da query 11" src="https://github.com/user-attachments/assets/9defdcc6-1b79-453a-bc9b-5914c60a1c52" />
+
+### 12. Salários diferentes em ordem crescente
+
+```sql
+SELECT DISTINCT salario FROM td_pilotos
+ORDER BY salario ASC;
+```
+
+Resultado:
+
+<img width="219" height="269" alt="Resultado da query 12" src="https://github.com/user-attachments/assets/ba580a5b-03c0-4d91-a0f2-69e7679b02c5" />
 
 ## Conceitos usados
 
